@@ -21,10 +21,6 @@ exports.index = function (req, resp) {
 	var nameError = null;
 	var passwordError = ctrl.checkPassword(password);
 
-	// Création d'événements
-	ctrl.checkName(name, eventEmitter);
-	ctrl.checkEmail(email, eventEmitter);
-
 	// Ecouteurs d'événements
 	eventEmitter.on('gotErrorName', function (error) {
 		// Erreur sur le nom
@@ -76,8 +72,8 @@ exports.index = function (req, resp) {
 
 	eventEmitter2.on('getIdFromEmail', function (id) {
 		// Création jeton JWT
-		var jwt = require('jsonwebtoken');
-		var token = jwt.sign({ id: id }, JWT_SECRET, { expiresIn: 24 * 3600 });
+		var jwtCtrl = require('./jwtController');
+		var token = jwtCtrl.createJeton(id);
 
 		// Insertion du jeton JWT dans la BDD
 		user.setToken(id, token);
@@ -91,7 +87,7 @@ exports.index = function (req, resp) {
 					name: name,
 					email: email,
 					token: token,
-					avatarPath: 'http://localhost:6060/img/avatar/default.png',
+					avatarName: 'default.png',
 					avatarClass: 'mini-avatar-height'
 				},
 				msg: {
@@ -102,4 +98,8 @@ exports.index = function (req, resp) {
 		});
 		
 	});
+
+	// Contrôle des données
+	ctrl.checkName(name, eventEmitter);
+	ctrl.checkEmail(email, eventEmitter);
 }

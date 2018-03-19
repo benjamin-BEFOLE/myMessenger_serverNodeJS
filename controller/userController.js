@@ -8,7 +8,7 @@ const HEIGHT_MIN = 200;
 * @param {String} chaine - Information à analyser
 * @return {String} Une chaine de caractères non vide en cas d'erreur
 */
-exports.checkEmail = function (chaine, eventEmitter) {
+var checkEmail = function (chaine, eventEmitter) {
 	var user = require('../modele/user');
 
 	user.getIdFromEmail(chaine, eventEmitter);
@@ -35,12 +35,34 @@ exports.checkEmail = function (chaine, eventEmitter) {
 }
 
 /**
+* Contrôle l'email de l'utilisateur
+*
+* @param {String} chaine - Information à analyser
+* @return {String} Une chaine de caractères non vide en cas d'erreur
+*/
+var loginCheckEmail = function (chaine) {
+		var errorEmail = '';
+		var regexEmail = /^[a-zA-Z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$/;
+
+		if (chaine == '' || chaine == null)
+			errorEmail = 'Veuillez bien renseigner ce champ';
+
+		else if (regexEmail.test(chaine))
+			errorEmail = '';
+
+		else
+			errorEmail = 'Ce mail n\'est pas valide';
+
+		return errorEmail;
+}
+
+/**
 * Contrôle le nom de l'utilisateur
 *
 * @param {String} chaine - Information à analyser
 * @return {String} Une chaine de caractères non vide en cas d'erreur
 */
-exports.checkName = function (chaine, eventEmitter) {
+var checkName = function (chaine, eventEmitter) {
 	var user = require('../modele/user');
 
 	user.getIdFromName(chaine, eventEmitter);
@@ -72,7 +94,7 @@ exports.checkName = function (chaine, eventEmitter) {
 * @param {String} chaine - Information à analyser
 * @return {String} Une chaine de caractères non vide en cas d'erreur
 */
-exports.checkPassword = function (chaine, eventEmitter) {
+var checkPassword = function (chaine) {
 	var regexPassword = /^[a-zA-z0-9]+$/;
 
 	if (chaine == '' || chaine == null)
@@ -88,8 +110,26 @@ exports.checkPassword = function (chaine, eventEmitter) {
 		return 'Ce mot de passe n\'est pas valide';
 }
 
+/**
+* Contrôle le mot de passe de l'utilisateur
+*
+* @param {String} chaine - Information à analyser
+* @return {String} Une chaine de caractères non vide en cas d'erreur
+*/
+var checkNewPassword = function (password1, password2) {
+	if (password1 != password2)
+		return 'Veuillez saisir le même mot de passe';
 
-exports.checkImage = function (info) {
+	else
+		return checkPassword(password1);
+}
+
+/**
+* Contrôle l'avatar de l'utilisateur
+*
+* @param {Object} info - Information à analyser
+*/
+var checkImage = function (info) {
 	var extensions = 'jpg   jpeg   png';
 
 	if (extensions.indexOf(info.extension) == -1) 
@@ -112,3 +152,25 @@ exports.checkImage = function (info) {
 		}
 	}
 }
+
+/**
+* Envoie un message de déconnexion au client
+*
+* @param {Object} resp - réponse serveur
+*/
+var deconnexion = function (resp) {
+	resp.status(401)
+		.json({
+			error: false,
+			msgError: 'utilisateur non authentifié',
+		});
+}
+
+// Exports
+exports.checkEmail = checkEmail;
+exports.loginCheckEmail = loginCheckEmail;
+exports.checkName = checkName;
+exports.checkPassword = checkPassword;
+exports.checkNewPassword = checkNewPassword;
+exports.checkImage = checkImage;
+exports.deconnexion = deconnexion;

@@ -50,6 +50,40 @@ exports.add = function (data, eventEmitter) {
 /**
 * Obtenir l'id d'un utilisateur à partir de son nom
 *
+* @param {String} email - email de l'utilisateur
+* @param {String} password - mot de passe de l'utilisateur
+* @param {Object} eventEmitter 
+*/
+exports.getUserId = function (email, password, eventEmitter) {
+	var id = 0;
+	// Connexion à la BDD 
+	var sqlDB = require('../modele/dataBase').newConnexion();
+	
+	// Requête SQL
+	var sql = 'SELECT id from users'
+		+ ' WHERE email = ? AND password = ?';
+
+	// Exécution
+	sqlDB.query(sql, [email, password], function (err, rows) {
+		if (err)
+			console.log('getUserId: Erreur obtention de l\'id');
+
+		if (rows.length)	
+			id =  rows[0].id;
+
+		sqlDB.end(function (err) {
+			if (err)
+				console.log('getUserId: Erreur déconnexion BDD');
+		})
+
+		// EventEmitter
+		eventEmitter.emit('getUserId', id);
+	});
+}
+
+/**
+* Obtenir l'id d'un utilisateur à partir de son nom
+*
 * @param {String} userName - nom de l'utilisateur
 * @param {Object} eventEmitter 
 */
@@ -114,6 +148,120 @@ exports.getIdFromEmail = function (userEmail, eventEmitter) {
 }
 
 /**
+* Obtenir les données d'un utilisateur à partir de l'id
+*
+* @param {String} id - identifiant de l'utilisateur
+* @param {Object} eventEmitter 
+*/
+exports.getUserData = function (id, eventEmitter) {
+	var data = null
+	// Connexion à la BDD 
+	var sqlDB = require('../modele/dataBase').newConnexion();
+	
+	// Requête SQL
+	var sql = 'SELECT * from users'
+		+ ' WHERE id = ?';
+
+	// Exécution
+	sqlDB.query(sql, [id], function (err, rows) {
+		if (err)
+			console.log('getUserData: Erreur obtention de l\'id');
+
+		if (rows.length)	
+			data =  rows[0];
+
+		sqlDB.end(function (err) {
+			if (err)
+				console.log('getUserData: Erreur déconnexion BDD');
+		})
+
+		// EventEmitter
+		eventEmitter.emit('getUserData', data);
+	});
+}
+
+/**
+* Modifie le nom d'un utilisateur dans la BDD
+*
+* @param {int} id - id de l'utilisateur
+* @param {String} name - nom de l'utilisateur 
+*/
+exports.setName = function (id, name) {
+	// Connexion à la BDD 
+	var sqlDB = require('../modele/dataBase').newConnexion();
+	
+	// Requête SQL
+	var sql = 'UPDATE users'
+			+ ' SET name = ?'
+			+ ' WHERE id = ?';
+
+	// Exécution
+	sqlDB.query(sql, [name, id], function (err) {
+		if (err)
+			console.log('setName: Erreur de modification du name');
+
+		sqlDB.end(function (err) {
+			if (err)
+				console.log('setName: Erreur déconnexion BDD');
+		})
+	});
+}
+
+/**
+* Modifie l'email d'un utilisateur dans la BDD
+*
+* @param {int} id - id de l'utilisateur
+* @param {String} email - email de l'utilisateur 
+*/
+exports.setEmail = function (id, email) {
+	// Connexion à la BDD 
+	var sqlDB = require('../modele/dataBase').newConnexion();
+	
+	// Requête SQL
+	var sql = 'UPDATE users'
+			+ ' SET email = ?'
+			+ ' WHERE id = ?';
+
+	// Exécution
+	sqlDB.query(sql, [email, id], function (err) {
+		if (err)
+			console.log('setEmail: Erreur de modification de l\'email');
+
+		sqlDB.end(function (err) {
+			if (err)
+				console.log('setEmail: Erreur déconnexion BDD');
+		})
+	});
+}
+
+/**
+* Modifie le mot de passe d'un utilisateur dans la BDD
+*
+* @param {int} id - id de l'utilisateur
+* @param {String} password - mot de passe de l'utilisateur 
+*/
+exports.setPassword = function (id, password) {
+	// Connexion à la BDD 
+	var sqlDB = require('../modele/dataBase').newConnexion();
+	
+	// Requête SQL
+	var sql = 'UPDATE users'
+			+ ' SET password = ?'
+			+ ' WHERE id = ?';
+
+	// Exécution
+	sqlDB.query(sql, [password, id], function (err) {
+		if (err)
+			console.log('setPassword: Erreur de modification du mot de passe');
+
+		sqlDB.end(function (err) {
+			if (err)
+				console.log('setPassword: Erreur déconnexion BDD');
+		})
+	});
+}
+
+/**
 * Modifie le token d'un utilisateur dans la BDD
 *
 * @param {int} id - id de l'utilisateur
@@ -141,7 +289,7 @@ exports.setToken = function (id, token) {
 }
 
 /**
-* Modifie l'avatar' d'un utilisateur dans la BDD
+* Modifie l'avatar d'un utilisateur dans la BDD
 *
 * @param {int} id - id de l'utilisateur
 * @param {String} name - nom du fichier
@@ -175,5 +323,32 @@ exports.setAvatar = function (id, name, oldPath, newPath, avatarClass) {
 	});
 }
 
+/**
+* Met l'avatar par défaut dans la BDD
+*
+* @param {int} id - id de l'utilisateur
+* @param {String} name - nom du fichier
+* @param {String} oldPath 
+* @param {String} newPath 
+*/
+exports.setAvatarDefault = function (id, name, avatarClass) {
+	// Connexion à la BDD 
+	var sqlDB = require('../modele/dataBase').newConnexion();
+	
+	// Requête SQL
+	var sql = 'UPDATE users'
+			+ ' SET avatarName = ?, avatarClass = ?'
+			+ ' WHERE id = ?';
 
+	// Exécution
+	sqlDB.query(sql, [name, avatarClass, id], function (err) {
+		if (err)
+			console.log('setAvatarDefault: Erreur de modification de l\'avatar');
+
+		sqlDB.end(function (err) {
+			if (err)
+				console.log('setAvatarDefault: Erreur déconnexion BDD');
+		})
+	});
+}
 

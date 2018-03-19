@@ -5,38 +5,23 @@
 * @param {Object} resp - réponse serveur
 */
 var index = function (req, resp) {
-	ctrl = require('./userController');
+	var user = require('../modele/user');
+	var ctrl = require('./userController');
+	var events = require('events');
+	var eventEmitter = new events.EventEmitter();
 	
 	// Données
-	var email = req.body.email;
-	var password = req.body.password;
-	
-	// Messages erreurs
-	var emailError = ctrl.checkEmail(email);
-	var passwordError = ctrl.checkPassword(password);
-	
-	// Si les données sont valides
-	if (emailError == '' && passwordError == '')
-	{
-		// TODO dooner token
+	var userId;
+	var email = req.params.email;
+	var password = req.params.password;
+	var token = null;
 
-		// On retourne les données
-		resp.status(200).
-			json({
-				error: false,
-				user: {
-					id: 1,
-					email: email,
-					avatar: 'default.png',
-					token: 'TODO TOKEN'
-				},
-				msg: {
-					emailError: emailError,
-					passwordError: passwordError
-				}
-		});
-	}
-	else
+	// Contrôle des données
+	var emailError = ctrl.loginCheckEmail(email);
+	var passwordError = ctrl.checkPassword(password);
+
+	// Ecouteurs d'événements
+	eventEmitter.on('error', function () {
 		// On retourne les messages d'erreur
 		resp.status(400).
 			json({
@@ -47,6 +32,50 @@ var index = function (req, resp) {
 					passwordError: passwordError
 				}
 		});
+	});
+
+	eventEmitter.on('getUserData', function (data) {
+		// Création d'un jeton JWT
+		var jwtCtrl = require('./jwtController');
+		token = jwtCtrl.createJeton(data.id);
+
+		// On retourne les données
+		resp.status(200).
+			json({
+				error: false,
+				user: {
+					id: data.id,
+					name: data.name,
+					email: data.email,
+					token: token,
+					avatarName: data.avatarName,
+					avatarClass: data.avatarClass
+				},
+				msg: {
+					emailError: emailError,
+					passwordError: passwordError
+				}
+		});
+	});
+
+	eventEmitter.on('getUserId', function (id) {
+		// Utilisateur trouvé dans la BDD
+		if (id) 
+			user.getUserData(id, eventEmitter);
+
+		// Utilisateur introuvable dans la BDD
+		else 
+			eventEmitter.emit('error');
+	});
+
+	// Les données sont valides
+	if (emailError == '' && passwordError == '')
+		user.getUserId(email, password, eventEmitter);
+
+	// Données non valides
+	else
+		eventEmitter.emit('error');
+
 }
 
 // Exportation

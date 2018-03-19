@@ -1,6 +1,3 @@
-// Constante(s)
-JWT_SECRET = '9qacP6B7af3d2nmj3ZHKAYMc59vD2yHrTK2MwS468996aHWfv2';
-
 // Variable(s)
 var port = 6060;
 

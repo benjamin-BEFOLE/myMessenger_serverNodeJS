@@ -11,11 +11,23 @@ var router = express.Router();
 router.route('/sign-up').
 	post(require(ctrl + 'inscriptionController').index);
 
-router.route('/login').
-	post(require(ctrl + 'connexionController').index);
+router.route('/login/email/:email/password/:password').
+	get(require(ctrl + 'connexionController').index);
 
 router.route('/user/:id/avatar').
-	put(require(ctrl + 'profilController').index);
+	put(require(ctrl + 'profilController').checkAvatar);
+
+router.route('/user/:id/avatar/default').
+	put(require(ctrl + 'profilController').setAvatarDefault);
+
+router.route('/user/:id/name/:name').
+	put(require(ctrl + 'profilController').checkName);
+
+router.route('/user/:id/email/:email').
+	put(require(ctrl + 'profilController').checkEmail);
+
+router.route('/user/:id/password').
+	put(require(ctrl + 'profilController').checkNewPassword);
 
 // Exportation
 exports.router = router;

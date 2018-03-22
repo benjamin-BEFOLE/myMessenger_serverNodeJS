@@ -60,7 +60,7 @@ exports.getUserId = function (email, password, eventEmitter) {
 	var sqlDB = require('../modele/dataBase').newConnexion();
 	
 	// Requête SQL
-	var sql = 'SELECT id from users'
+	var sql = 'SELECT id FROM users'
 		+ ' WHERE email = ? AND password = ?';
 
 	// Exécution
@@ -93,7 +93,7 @@ exports.getIdFromName = function (userName, eventEmitter) {
 	var sqlDB = require('../modele/dataBase').newConnexion();
 	
 	// Requête SQL
-	var sql = 'SELECT id from users'
+	var sql = 'SELECT id FROM users'
 		+ ' WHERE name = ?';
 
 	// Exécution
@@ -126,7 +126,7 @@ exports.getIdFromEmail = function (userEmail, eventEmitter) {
 	var sqlDB = require('../modele/dataBase').newConnexion();
 	
 	// Requête SQL
-	var sql = 'SELECT id from users'
+	var sql = 'SELECT id FROM users'
 		+ ' WHERE email = ?';
 
 	// Exécution
@@ -150,16 +150,17 @@ exports.getIdFromEmail = function (userEmail, eventEmitter) {
 /**
 * Obtenir les données d'un utilisateur à partir de l'id
 *
-* @param {String} id - identifiant de l'utilisateur
+* @param {int} id - identifiant de l'utilisateur
 * @param {Object} eventEmitter 
 */
 exports.getUserData = function (id, eventEmitter) {
 	var data = null
+	
 	// Connexion à la BDD 
 	var sqlDB = require('../modele/dataBase').newConnexion();
 	
 	// Requête SQL
-	var sql = 'SELECT * from users'
+	var sql = 'SELECT * FROM users'
 		+ ' WHERE id = ?';
 
 	// Exécution

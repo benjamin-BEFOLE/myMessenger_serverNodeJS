@@ -40,20 +40,20 @@ var checkEmail = function (chaine, eventEmitter) {
 * @param {String} chaine - Information à analyser
 * @return {String} Une chaine de caractères non vide en cas d'erreur
 */
-var loginCheckEmail = function (chaine) {
-		var errorEmail = '';
-		var regexEmail = /^[a-zA-Z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$/;
+var checkEmailSync = function (chaine) {
+	var errorEmail = '';
+	var regexEmail = /^[a-zA-Z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$/;
 
-		if (chaine == '' || chaine == null)
-			errorEmail = 'Veuillez bien renseigner ce champ';
+	if (chaine == '' || chaine == null)
+		errorEmail = 'Veuillez bien renseigner ce champ';
 
-		else if (regexEmail.test(chaine))
-			errorEmail = '';
+	else if (regexEmail.test(chaine))
+		errorEmail = '';
 
-		else
-			errorEmail = 'Ce mail n\'est pas valide';
+	else
+		errorEmail = 'Ce mail n\'est pas valide';
 
-		return errorEmail;
+	return errorEmail;
 }
 
 /**
@@ -86,6 +86,28 @@ var checkName = function (chaine, eventEmitter) {
 		// EVENEMENT: erreur sur le nom traitée
 		eventEmitter.emit('gotErrorName', errorName);
 	});
+}
+
+/**
+* Contrôle le nom de l'utilisateur
+*
+* @param {String} chaine - Information à analyser
+* @return {String} Une chaine de caractères non vide en cas d'erreur
+*/
+var checkNameSync = function (chaine) {
+	var errorName = null;
+	var regexName = /^[a-zA-Z]+[a-zA-Z ]*$/;
+
+	if (chaine == '' || chaine == null)
+		errorName = 'Veuillez bien renseigner ce champ';
+
+	else if (regexName.test(chaine))
+		errorName = '';
+
+	else
+		errorName = 'Ce champ ne doit contenir que des lettres (sans accent)';
+
+	return errorName;
 }
 
 /**
@@ -168,8 +190,9 @@ var deconnexion = function (resp) {
 
 // Exports
 exports.checkEmail = checkEmail;
-exports.loginCheckEmail = loginCheckEmail;
+exports.checkEmailSync = checkEmailSync;
 exports.checkName = checkName;
+exports.checkNameSync = checkNameSync;
 exports.checkPassword = checkPassword;
 exports.checkNewPassword = checkNewPassword;
 exports.checkImage = checkImage;

@@ -17,7 +17,7 @@ var index = function (req, resp) {
 	var token = null;
 
 	// Contrôle des données
-	var emailError = ctrl.loginCheckEmail(email);
+	var emailError = ctrl.checkEmailSync(email);
 	var passwordError = ctrl.checkPassword(password);
 
 	// Ecouteurs d'événements
@@ -38,6 +38,7 @@ var index = function (req, resp) {
 		// Création d'un jeton JWT
 		var jwtCtrl = require('./jwtController');
 		token = jwtCtrl.createJeton(data.id);
+		user.setToken(data.id, token);
 
 		// On retourne les données
 		resp.status(200).

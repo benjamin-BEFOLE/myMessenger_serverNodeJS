@@ -29,5 +29,11 @@ router.route('/user/:id/email/:email').
 router.route('/user/:id/password').
 	put(require(ctrl + 'profilController').checkNewPassword);
 
+router.route('/chat/:userId/new-contact/:chaine').
+	get(require(ctrl + 'newContactController').index);
+
+router.route('/chat/:userId/new-contact').
+	post(require(ctrl + 'contactController').add);
+
 // Exportation
 exports.router = router;

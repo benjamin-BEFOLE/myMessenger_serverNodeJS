@@ -1,8 +1,8 @@
 /**
-* Obtenir l'id d'un utilisateur à partir de son nom
+* Teste si deux utilisateurs sont contact
 *
 * @param {int} userId - l'identifiant de l'utilisateur
-* @param {Object} userDataContact - l'identifiant du contact
+* @param {Object} userDataContact - données du contact
 * @param {Object} eventEmitter 
 */
 var isContact = function (userId, userDataContact, eventEmitter) {
@@ -133,7 +133,52 @@ var getNewContacts = function (id, chaine, eventEmitter) {
 	});
 }
 
+/**
+* Obtenir la liste de contacts d'un utilisateur
+*
+* @param {String} chaine - identifiant de l'utilisateur
+* @param {Object} eventEmitter 
+*/
+var getContacts = function (id, chaine, eventEmitter) {
+	var data = [];
+	
+	// Connexion à la BDD 
+	var sqlDB = require('../modele/dataBase').newConnexion();
+
+	// Requête SQL
+	var sql = 'SELECT U.* FROM users U ' 
+		+ 'JOIN contacts C ' 
+		+ 'ON U.id = C.contact_id ' 
+		+ 'WHERE C.user_id = ? AND U.name LIKE ? ' 
+		+ 'ORDER BY U.name'
+
+	// Exécution
+	sqlDB.query(sql, [id, chaine + '%'], function (err, rows) {
+		if (err)
+			console.log('getContacts: ' + err.message);
+
+		rows.forEach(function (elm, index) {
+			var tmp = {
+				id: elm.id,
+				name: elm.name,
+				avatarName: elm.avatarName,
+				avatarClass: elm.avatarClass
+			};
+			data.push(tmp);
+		})
+
+		// On envoie les résultats
+		eventEmitter.emit('getContacts', data) 	
+
+		sqlDB.end(function (err) {
+			if (err)
+				console.log('getContacts: ' + err.message);
+		})
+	});
+}
+
 // Exports
 exports.isContact = isContact;
 exports.add = add;
 exports.getNewContacts = getNewContacts;
+exports.getContacts = getContacts;

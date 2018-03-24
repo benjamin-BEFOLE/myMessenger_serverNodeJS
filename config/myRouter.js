@@ -35,5 +35,20 @@ router.route('/chat/:userId/new-contact/:chaine').
 router.route('/chat/:userId/new-contact').
 	post(require(ctrl + 'contactController').add);
 
+router.route('/chat/:userId/contact/:chaine').
+	get(require(ctrl + 'contactController').getList);
+
+router.route('/chat/:userId/discussion/:chaine').
+	get(require(ctrl + 'discussionController').getLastMessages);
+
+router.route('/discussion/:userId/message').
+	post(require(ctrl + 'discussionController').add);
+
+router.route('/discussion/:userId/all-messages/:contactId').
+	get(require(ctrl + 'discussionController').getAllMessages);
+
+router.route('/discussion/:userId/message/:messageId/update-status').
+	put(require(ctrl + 'discussionController').updateStatus);
+
 // Exportation
 exports.router = router;

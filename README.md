@@ -29,7 +29,7 @@ Dans le fichier *dataBase.js*:
 			database: 'my_messenger_node_js'
 		});
 
-		// Connection
+		// Connexion
 		sqlDB.connect(function (err) {
 			if (err) throw err;
 		});
@@ -37,7 +37,7 @@ Dans le fichier *dataBase.js*:
 		return sqlDB;
 	}
 
-	// Exportation
+	// Exports
 	exports.newConnexion = newConnexion;
 ```
 

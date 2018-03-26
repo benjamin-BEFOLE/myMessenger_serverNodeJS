@@ -12,7 +12,7 @@ npm install
 
 Base de données
 ===============
-Les informations concernant la base de données sont dans le dossier [BDD](https://github.com/benjamin-BEFOLE/myMessenger_serverNodeJS/BDD). Importer le fichier *BDD.sql* pour installer la base de données.
+Les informations concernant la base de données sont dans le dossier [BDD](https://github.com/benjamin-BEFOLE/myMessenger_serverNodeJS/tree/master/BDD). Importer le fichier *BDD.sql* pour installer la base de données.
 
 Dans le fichier *dataBase.js*:
 ```javascript

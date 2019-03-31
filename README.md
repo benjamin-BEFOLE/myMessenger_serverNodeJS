@@ -1,6 +1,6 @@
 Description
 ===========
-Développer une API REST, avec Node.js,  permettant à ses utilisateurs de s'envoyer des messages en temps réel. Les utilisateurs disposent d'un profil qu'ils peuvent modifier et d'une page d'accueil sur laquelle ils peuvent consulter ou envoyer des messages. Un [interface](https://github.com/benjamin-BEFOLE/myMessenger_angularJS) de cette application a été avec AngularJS.
+Développer une API REST, avec Node.js,  permettant à ses utilisateurs de s'envoyer des messages en temps réel. Les utilisateurs disposent d'un profil qu'ils peuvent modifier et d'une page d'accueil sur laquelle ils peuvent consulter ou envoyer des messages. Une [interface](https://github.com/benjamin-BEFOLE/myMessenger_angularJS) de cette application a été développée avec AngularJS.
 
 
 Installation
